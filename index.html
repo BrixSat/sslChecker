@@ -92,7 +92,7 @@
             box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
         }
 
-        .btn-check {
+        .btn-custom {
             background: linear-gradient(45deg, #667eea, #764ba2);
             border: none;
             border-radius: 12px;
@@ -103,9 +103,11 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             color: white;
+            display: block !important;
+            visibility: visible !important;
         }
 
-        .btn-check:hover {
+        .btn-custom:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
             color: white;
@@ -485,7 +487,7 @@
                                    value="">
                         </div>
                         <div class="col-md-4 d-flex align-items-end">
-                            <button class="btn btn-primary w-100 btn-lg" style="font-size: 1.75rem" onclick="checkSSL()">
+                            <button class="btn btn-custom w-100" onclick="checkSSL()">
                                 <i class="fas fa-search"></i> Check SSL
                             </button>
                         </div>
@@ -521,7 +523,7 @@ MIICijCCAXICAQAwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUx
 -----END CERTIFICATE REQUEST-----"></textarea>
                     </div>
 
-                    <button class="btn btn-check" onclick="decodeCSR()">
+                    <button class="btn btn-custom" onclick="decodeCSR()">
                         <i class="fas fa-decode"></i> Decode CSR
                     </button>
                 </div>
@@ -529,6 +531,87 @@ MIICijCCAXICAQAwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUx
                 <div class="results-section" id="csrResults">
                     <h5 class="mb-3"><i class="fas fa-info-circle"></i> CSR Information</h5>
                     <div id="csrDecoded"></div>
+                </div>
+                <div class="info-section">
+                    <h5><i class="fas fa-info-circle"></i> About CSR Decoder</h5>
+
+                    <div class="row g-4">
+                        <div class="col-lg-8">
+                            <p class="lead mb-3">
+                                <strong>Decode and verify your Certificate Signing Request</strong> to ensure it contains the correct information before submitting to a Certificate Authority.
+                            </p>
+
+                            <div class="mb-4">
+                                <h6 class="text-primary mb-2"><i class="fas fa-question-circle me-2"></i>What is a CSR?</h6>
+                                <p class="mb-3">
+                                    A Certificate Signing Request (CSR) is a block of encoded text containing:
+                                </p>
+                                <ul class="list-unstyled ps-3">
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Company information for SSL certificate issuance</li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> SSL public key data</li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Domain name and organizational details</li>
+                                </ul>
+                            </div>
+
+                            <div class="mb-4">
+                                <h6 class="text-primary mb-2"><i class="fas fa-exclamation-triangle me-2"></i>Why Decode CSRs?</h6>
+                                <p>
+                                    Since CSRs are encoded, it's difficult to verify their contents. Certificate Authorities use this information to create certificates, so accuracy is crucial. Our decoder helps you verify all details before submission.
+                                </p>
+                            </div>
+
+                            <div class="alert alert-info border-0 bg-light">
+                                <div class="d-flex align-items-start">
+                                    <i class="fas fa-lightbulb text-warning me-3 mt-1"></i>
+                                    <div>
+                                        <strong>Format Requirements:</strong>
+                                        <br>Your CSR should start with <code>-----BEGIN CERTIFICATE REQUEST-----</code>
+                                        <br>and end with <code>-----END CERTIFICATE REQUEST-----</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="card border-0 bg-dark text-white h-100">
+                                <div class="card-header bg-transparent border-bottom border-secondary">
+                                    <h6 class="mb-0 text-light">
+                                        <i class="fas fa-terminal me-2"></i>OpenSSL Command
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="small text-light mb-2">Check CSRs locally with OpenSSL:</p>
+                                    <div class="bg-black rounded p-3">
+                                        <code class="text-success d-block">
+                                            openssl req -in mycsr.csr -noout -text
+                                        </code>
+                                    </div>
+                                    <button class="btn btn-outline-light btn-sm mt-2 w-100" onclick="copyToClipboard('openssl req -in mycsr.csr -noout -text', this)">
+                                        <i class="fas fa-copy me-1"></i> Copy Command
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                <span class="badge bg-primary fs-6 px-3 py-2">
+                    <i class="fas fa-shield-alt me-1"></i> Secure Decoding
+                </span>
+                                <span class="badge bg-success fs-6 px-3 py-2">
+                    <i class="fas fa-eye me-1"></i> Instant Verification
+                </span>
+                                <span class="badge bg-info fs-6 px-3 py-2">
+                    <i class="fas fa-lock me-1"></i> Privacy Protected
+                </span>
+                                <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+                    <i class="fas fa-certificate me-1"></i> CA Ready
+                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -547,7 +630,7 @@ MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
 -----END CERTIFICATE-----"></textarea>
                     </div>
 
-                    <button class="btn btn-check" onclick="decodeCert()">
+                    <button class="btn btn-custom" onclick="decodeCert()">
                         <i class="fas fa-decode"></i> Decode Certificate
                     </button>
                 </div>
@@ -555,6 +638,111 @@ MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
                 <div class="results-section" id="certResults">
                     <h5 class="mb-3"><i class="fas fa-info-circle"></i> Certificate Information</h5>
                     <div id="certDecoded"></div>
+                </div>
+
+                <div class="info-section">
+                    <h5><i class="fas fa-certificate"></i> About Certificate Decoder</h5>
+
+                    <div class="row g-4">
+                        <div class="col-lg-8">
+                            <p class="lead mb-3">
+                                <strong>Decode your PEM encoded SSL certificate</strong> to view and verify all certificate information and public key details.
+                            </p>
+
+                            <div class="mb-4">
+                                <h6 class="text-primary mb-2"><i class="fas fa-file-certificate me-2"></i>What is a PEM Certificate?</h6>
+                                <p class="mb-3">
+                                    A PEM encoded certificate is a block of encoded text containing:
+                                </p>
+                                <ul class="list-unstyled ps-3">
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Complete certificate information</li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Public key data</li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Issuer and validity details</li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Certificate chain information</li>
+                                </ul>
+                            </div>
+
+                            <div class="mb-4">
+                                <h6 class="text-primary mb-2"><i class="fas fa-search me-2"></i>Why Decode Certificates?</h6>
+                                <p>
+                                    Decoding certificates helps you verify the certificate details before installation, troubleshoot SSL issues, and ensure the certificate matches your domain and organization information.
+                                </p>
+                            </div>
+
+                            <div class="alert alert-info border-0 bg-light">
+                                <div class="d-flex align-items-start">
+                                    <i class="fas fa-lightbulb text-warning me-3 mt-1"></i>
+                                    <div>
+                                        <strong>Format Requirements:</strong>
+                                        <br>Your certificate should start with <code>-----BEGIN CERTIFICATE-----</code>
+                                        <br>and end with <code>-----END CERTIFICATE-----</code>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-warning border-0 bg-light">
+                                <div class="d-flex align-items-start">
+                                    <i class="fas fa-desktop text-info me-3 mt-1"></i>
+                                    <div>
+                                        <strong>Windows Tip:</strong> You can also view certificate information by double-clicking the certificate file on Windows machines.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="card border-0 bg-dark text-white h-100">
+                                <div class="card-header bg-transparent border-bottom border-secondary">
+                                    <h6 class="mb-0 text-light">
+                                        <i class="fas fa-terminal me-2"></i>OpenSSL Command
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="small text-light mb-2">Decode certificates locally with OpenSSL:</p>
+                                    <div class="bg-black rounded p-3">
+                                        <code class="text-success d-block">
+                                            openssl x509 -in certificate.crt -text -noout
+                                        </code>
+                                    </div>
+                                    <button class="btn btn-outline-light btn-sm mt-2 w-100" onclick="copyToClipboard('openssl x509 -in certificate.crt -text -noout', this)">
+                                        <i class="fas fa-copy me-1"></i> Copy Command
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="alert alert-success border-0 bg-light-success">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-arrow-right text-success me-3"></i>
+                                    <div>
+                                        <strong>Next Step:</strong> After installing your SSL certificate, use our <strong>SSL Checker</strong> tool to verify it's installed correctly on your server.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                <span class="badge bg-primary fs-6 px-3 py-2">
+                    <i class="fas fa-eye me-1"></i> Instant Decode
+                </span>
+                                <span class="badge bg-success fs-6 px-3 py-2">
+                    <i class="fas fa-shield-check me-1"></i> Verify Details
+                </span>
+                                <span class="badge bg-info fs-6 px-3 py-2">
+                    <i class="fas fa-key me-1"></i> Public Key Info
+                </span>
+                                <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+                    <i class="fas fa-server me-1"></i> Pre-Install Check
+                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -576,7 +764,7 @@ MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
                         <!-- Dynamic inputs based on selection -->
                     </div>
 
-                    <button class="btn btn-check" onclick="checkMatch()">
+                    <button class="btn btn-custom" onclick="checkMatch()">
                         <i class="fas fa-check-double"></i> Check Match
                     </button>
                 </div>
@@ -584,6 +772,153 @@ MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
                 <div class="results-section" id="matchResults">
                     <h5 class="mb-3"><i class="fas fa-info-circle"></i> Match Results</h5>
                     <div id="matchDecoded"></div>
+                </div>
+
+                <div class="info-section">
+                    <h5><i class="fas fa-key"></i> About Certificate Key Matcher</h5>
+
+                    <div class="row g-4">
+                        <div class="col-lg-8">
+                            <p class="lead mb-3">
+                                <strong>Verify that your certificates, private keys, and CSRs match</strong> to ensure proper SSL configuration and avoid certificate installation issues.
+                            </p>
+
+                            <div class="mb-4">
+                                <h6 class="text-primary mb-2"><i class="fas fa-puzzle-piece me-2"></i>What Does This Tool Do?</h6>
+                                <p class="mb-3">
+                                    The Certificate Key Matcher helps you verify relationships between:
+                                </p>
+                                <ul class="list-unstyled ps-3">
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>Private Key ↔ Certificate:</strong> Ensures they form a valid pair</li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>CSR ↔ Certificate:</strong> Confirms the certificate was issued from the CSR</li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <strong>Public Key Hashes:</strong> Compares cryptographic fingerprints</li>
+                                </ul>
+                            </div>
+
+                            <div class="mb-4">
+                                <h6 class="text-primary mb-2"><i class="fas fa-question-circle me-2"></i>Why Check Key Matching?</h6>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-start">
+                                            <i class="fas fa-exclamation-triangle text-warning me-2 mt-1"></i>
+                                            <small>Prevent SSL installation failures</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-start">
+                                            <i class="fas fa-search text-info me-2 mt-1"></i>
+                                            <small>Troubleshoot certificate issues</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-start">
+                                            <i class="fas fa-shield-check text-success me-2 mt-1"></i>
+                                            <small>Verify certificate authenticity</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-start">
+                                            <i class="fas fa-cogs text-secondary me-2 mt-1"></i>
+                                            <small>Organize certificate files</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info border-0 bg-light">
+                                <div class="d-flex align-items-start">
+                                    <i class="fas fa-info-circle text-primary me-3 mt-1"></i>
+                                    <div>
+                                        <strong>How It Works:</strong> The tool compares SHA256 hashes of the public keys from your files. Matching hashes confirm the files belong together.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="card border-0 bg-dark text-white h-100">
+                                <div class="card-header bg-transparent border-bottom border-secondary">
+                                    <h6 class="mb-0 text-light">
+                                        <i class="fas fa-terminal me-2"></i>OpenSSL Commands
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="small text-light mb-3">Check key matching locally:</p>
+
+                                    <div class="mb-3">
+                                        <small class="text-muted d-block mb-1">Private Key Hash:</small>
+                                        <div class="bg-black rounded p-2">
+                                            <code class="text-success small">
+                                                openssl pkey -in privateKey.key -pubout -outform pem | sha256sum
+                                            </code>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <small class="text-muted d-block mb-1">Certificate Hash:</small>
+                                        <div class="bg-black rounded p-2">
+                                            <code class="text-success small">
+                                                openssl x509 -in certificate.crt -pubkey -noout -outform pem | sha256sum
+                                            </code>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <small class="text-muted d-block mb-1">CSR Hash:</small>
+                                        <div class="bg-black rounded p-2">
+                                            <code class="text-success small">
+                                                openssl req -in CSR.csr -pubkey -noout -outform pem | sha256sum
+                                            </code>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="alert alert-warning border-0 bg-warning bg-opacity-10">
+                                <div class="d-flex align-items-start">
+                                    <i class="fas fa-shield-alt text-warning me-3 mt-1 fs-5"></i>
+                                    <div>
+                                        <h6 class="text-warning mb-2"><i class="fas fa-exclamation-triangle me-1"></i> Security Notice</h6>
+                                        <p class="mb-2">
+                                            <strong>Your private key should remain on your server.</strong> While we use SSL encryption during transmission, for maximum security we recommend:
+                                        </p>
+                                        <ul class="small mb-2">
+                                            <li>Use the OpenSSL commands above to check hashes locally</li>
+                                            <li>Only upload keys when absolutely necessary</li>
+                                            <li>Consider performing a private key consistency check if tampering is suspected</li>
+                                        </ul>
+                                        <a href="#" class="text-warning text-decoration-none small">
+                                            <i class="fas fa-external-link-alt me-1"></i>
+                                            Learn about private key consistency checks
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                <span class="badge bg-primary fs-6 px-3 py-2">
+                    <i class="fas fa-fingerprint me-1"></i> Hash Comparison
+                </span>
+                                <span class="badge bg-success fs-6 px-3 py-2">
+                    <i class="fas fa-link me-1"></i> Verify Pairs
+                </span>
+                                <span class="badge bg-info fs-6 px-3 py-2">
+                    <i class="fas fa-lock me-1"></i> SSL Encrypted
+                </span>
+                                <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+                    <i class="fas fa-server me-1"></i> Local Commands
+                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -631,7 +966,7 @@ MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
                         <input type="password" class="form-control" id="pfxPassword" placeholder="Enter PFX password">
                     </div>
 
-                    <button class="btn btn-check" onclick="convertCertificate()">
+                    <button class="btn btn-custom" onclick="convertCertificate()">
                         <i class="fas fa-exchange-alt"></i> Convert Certificate
                     </button>
                 </div>
@@ -641,47 +976,242 @@ MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
                     <div id="convertDecoded"></div>
                 </div>
 
-                <!-- Certificate Format Information -->
                 <div class="info-section">
-                    <h5><i class="fas fa-info-circle"></i> Certificate Format Information</h5>
+                    <h5><i class="fas fa-exchange-alt"></i> About SSL Certificate Converter</h5>
 
-                    <h6 class="mt-3"><strong>PEM Format</strong></h6>
-                    <p>The PEM format is the most common format that Certificate Authorities issue certificates in. PEM
-                        certificates usually have extensions such as .pem, .crt, .cer, and .key. They are Base64 encoded
-                        ASCII files and contain "-----BEGIN CERTIFICATE-----" and "-----END CERTIFICATE-----"
-                        statements. Server certificates, intermediate certificates, and private keys can all be put into
-                        the PEM format.</p>
+                    <div class="row g-4 mb-4">
+                        <div class="col-lg-8">
+                            <p class="lead mb-3">
+                                <strong>Convert SSL certificates between different formats</strong> (PEM, DER, P7B, PFX) to ensure compatibility across various platforms and servers.
+                            </p>
 
-                    <h6 class="mt-3"><strong>DER Format</strong></h6>
-                    <p>The DER format is simply a binary form of a certificate instead of the ASCII PEM format. It
-                        sometimes has a file extension of .der but it often has a file extension of .cer so the only way
-                        to tell the difference between a DER .cer file and a PEM .cer file is to open it in a text
-                        editor and look for the BEGIN/END statements.</p>
+                            <div class="mb-4">
+                                <h6 class="text-primary mb-2"><i class="fas fa-server me-2"></i>Why Convert Certificates?</h6>
+                                <p class="mb-3">Different platforms require specific certificate formats:</p>
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <i class="fab fa-windows text-primary me-2"></i>
+                                            <span><strong>Windows:</strong> PFX files (.pfx, .p12)</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <i class="fas fa-server text-success me-2"></i>
+                                            <span><strong>Apache:</strong> PEM files (.crt, .cer)</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <i class="fab fa-java text-warning me-2"></i>
+                                            <span><strong>Java/Tomcat:</strong> DER or P7B files</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <i class="fas fa-cloud text-info me-2"></i>
+                                            <span><strong>Cloud Services:</strong> Various formats</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                    <h6 class="mt-3"><strong>PKCS#7/P7B Format</strong></h6>
-                    <p>The PKCS#7 or P7B format is usually stored in Base64 ASCII format and has a file extension of
-                        .p7b or .p7c. P7B certificates contain "-----BEGIN PKCS7-----" and "-----END PKCS7-----"
-                        statements. A P7B file only contains certificates and chain certificates, not the private
-                        key.</p>
+                            <div class="alert alert-info border-0 bg-light">
+                                <div class="d-flex align-items-start">
+                                    <i class="fas fa-magic text-primary me-3 mt-1"></i>
+                                    <div>
+                                        <strong>How to Use:</strong> Select your certificate file, choose the current format (auto-detected from extension), select target format, and click <strong>Convert Certificate</strong>.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                    <h6 class="mt-3"><strong>PKCS#12/PFX Format</strong></h6>
-                    <p>The PKCS#12 or PFX format is a binary format for storing the server certificate, any intermediate
-                        certificates, and the private key in one encryptable file. PFX files usually have extensions
-                        such as .pfx and .p12. PFX files are typically used on Windows machines to import and export
-                        certificates and private keys.</p>
+                        <div class="col-lg-4">
+                            <div class="card border-0 bg-gradient text-white h-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <div class="card-header bg-transparent border-bottom border-light border-opacity-25">
+                                    <h6 class="mb-0 text-white">
+                                        <i class="fas fa-shield-alt me-2"></i>Security Recommendation
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start mb-3">
+                                        <i class="fas fa-exclamation-triangle text-warning me-2 mt-1"></i>
+                                        <small class="text-white">
+                                            For PFX conversions containing private keys, use OpenSSL commands locally to keep your private key secure on your server.
+                                        </small>
+                                    </div>
+                                    <div class="d-flex align-items-start">
+                                        <i class="fas fa-laptop text-light me-2 mt-1"></i>
+                                        <small class="text-white">
+                                            See OpenSSL commands below for local conversion options.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                    <h6 class="mt-3"><strong>OpenSSL Commands</strong></h6>
-                    <div class="bg-dark text-light p-3 rounded">
-                        <small>
-                            <strong>Convert PEM to DER:</strong><br>
-                            openssl x509 -outform der -in certificate.pem -out certificate.der<br><br>
-                            <strong>Convert PEM to P7B:</strong><br>
-                            openssl crl2pkcs7 -nocrl -certfile certificate.cer -out certificate.p7b<br><br>
-                            <strong>Convert DER to PEM:</strong><br>
-                            openssl x509 -inform der -in certificate.cer -out certificate.pem<br><br>
-                            <strong>Convert PFX to PEM:</strong><br>
-                            openssl pkcs12 -in certificate.pfx -out certificate.cer -nodes
-                        </small>
+                    <!-- Certificate Format Information -->
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0"><i class="fas fa-file-alt me-2"></i>PEM Format</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="small mb-2"><strong>Extensions:</strong> .pem, .crt, .cer, .key</p>
+                                    <p class="small mb-2"><strong>Encoding:</strong> Base64 ASCII</p>
+                                    <p class="small mb-2"><strong>Usage:</strong> Apache, Nginx, most servers</p>
+                                    <div class="bg-light p-2 rounded">
+                                        <code class="small">-----BEGIN CERTIFICATE-----</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0"><i class="fas fa-file-code me-2"></i>DER Format</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="small mb-2"><strong>Extensions:</strong> .der, .cer</p>
+                                    <p class="small mb-2"><strong>Encoding:</strong> Binary</p>
+                                    <p class="small mb-2"><strong>Usage:</strong> Java platforms</p>
+                                    <div class="bg-light p-2 rounded">
+                                        <code class="small">Binary certificate data</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-header bg-warning text-dark">
+                                    <h6 class="mb-0"><i class="fas fa-file-archive me-2"></i>P7B Format</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="small mb-2"><strong>Extensions:</strong> .p7b, .p7c</p>
+                                    <p class="small mb-2"><strong>Encoding:</strong> Base64 ASCII</p>
+                                    <p class="small mb-2"><strong>Usage:</strong> Windows, Java Tomcat</p>
+                                    <div class="bg-light p-2 rounded">
+                                        <code class="small">-----BEGIN PKCS7-----</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-header bg-info text-white">
+                                    <h6 class="mb-0"><i class="fas fa-file-contract me-2"></i>PFX Format</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="small mb-2"><strong>Extensions:</strong> .pfx, .p12</p>
+                                    <p class="small mb-2"><strong>Encoding:</strong> Binary (encrypted)</p>
+                                    <p class="small mb-2"><strong>Usage:</strong> Windows servers</p>
+                                    <div class="bg-light p-2 rounded">
+                                        <code class="small">Contains cert + private key</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- OpenSSL Commands Section -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card border-0 bg-dark text-white">
+                                <div class="card-header bg-transparent border-bottom border-secondary">
+                                    <h6 class="mb-0 text-light">
+                                        <i class="fas fa-terminal me-2"></i>OpenSSL Conversion Commands
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-4">
+                                        <!-- PEM Conversions -->
+                                        <div class="col-lg-6">
+                                            <h6 class="text-primary mb-3"><i class="fas fa-arrow-right me-2"></i>From PEM Format</h6>
+
+                                            <div class="mb-3">
+                                                <small class="text-muted d-block mb-1">PEM to DER:</small>
+                                                <div class="bg-black rounded p-2">
+                                                    <code class="text-success small d-block">openssl x509 -outform der -in certificate.pem -out certificate.der</code>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <small class="text-muted d-block mb-1">PEM to P7B:</small>
+                                                <div class="bg-black rounded p-2">
+                                                    <code class="text-success small d-block">openssl crl2pkcs7 -nocrl -certfile certificate.cer -out certificate.p7b</code>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <small class="text-muted d-block mb-1">PEM to PFX:</small>
+                                                <div class="bg-black rounded p-2">
+                                                    <code class="text-success small d-block">openssl pkcs12 -export -out certificate.pfx -inkey privateKey.key -in certificate.crt</code>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Other Format Conversions -->
+                                        <div class="col-lg-6">
+                                            <h6 class="text-warning mb-3"><i class="fas fa-arrow-left me-2"></i>To PEM Format</h6>
+
+                                            <div class="mb-3">
+                                                <small class="text-muted d-block mb-1">DER to PEM:</small>
+                                                <div class="bg-black rounded p-2">
+                                                    <code class="text-success small d-block">openssl x509 -inform der -in certificate.cer -out certificate.pem</code>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <small class="text-muted d-block mb-1">P7B to PEM:</small>
+                                                <div class="bg-black rounded p-2">
+                                                    <code class="text-success small d-block">openssl pkcs7 -print_certs -in certificate.p7b -out certificate.cer</code>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <small class="text-muted d-block mb-1">PFX to PEM:</small>
+                                                <div class="bg-black rounded p-2">
+                                                    <code class="text-success small d-block">openssl pkcs12 -in certificate.pfx -out certificate.cer -nodes</code>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="alert alert-warning mt-3 mb-0">
+                                        <small>
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            <strong>Note:</strong> When converting PFX to PEM, OpenSSL outputs all certificates and the private key in one file.
+                                            You'll need to manually separate them into individual files for most server configurations.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature Badges -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                <span class="badge bg-primary fs-6 px-3 py-2">
+                    <i class="fas fa-magic me-1"></i> Auto-Detection
+                </span>
+                                <span class="badge bg-success fs-6 px-3 py-2">
+                    <i class="fas fa-server me-1"></i> Multi-Platform
+                </span>
+                                <span class="badge bg-info fs-6 px-3 py-2">
+                    <i class="fas fa-download me-1"></i> Instant Download
+                </span>
+                                <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+                    <i class="fas fa-shield-alt me-1"></i> Secure Process
+                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -807,19 +1337,15 @@ MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
                     <div class="result-value">
                         <strong>${data.hostname}</strong> resolves to <strong>${data.resolvedIP || 'Unknown'}</strong>
                     </div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
                         <i class="fas fa-cogs"></i>
                         Server Type
                     </div>
                     <div class="result-value">${data.serverType || 'Unknown'}</div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
-                        <i class="fas fa-shield-check"></i>
+                        <i class="fas fa-check"></i>
                         Certificate Status
                     </div>
                     <div class="result-value">
@@ -829,17 +1355,13 @@ MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
                             ${data.isTrusted ? 'The certificate should be trusted by all major web browsers (all the correct intermediate certificates are installed).' : 'Certificate trust issues detected.'}
                         </small>
                     </div>
-                </div>
-
-                <div class="result-item">
+                    <br>
                     <div class="result-label">
                         <i class="fas fa-building"></i>
                         Certificate Issuer
                     </div>
                     <div class="result-value">The certificate was issued by <strong>${data.issuer || 'Unknown'}</strong></div>
-                </div>
-
-                <div class="result-item">
+                    <br>
                     <div class="result-label">
                         <i class="fas fa-calendar-alt"></i>
                         Certificate Expiry
@@ -849,9 +1371,7 @@ MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
                             The certificate will expire in ${data.daysUntilExpiry} days
                         </span>
                     </div>
-                </div>
-
-                <div class="result-item">
+                    <br>
                     <div class="result-label">
                         <i class="fas fa-check-circle"></i>
                         Hostname Verification
@@ -937,49 +1457,37 @@ MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
                         Common Name
                     </div>
                     <div class="result-value">${data.commonName || 'N/A'}</div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
                         <i class="fas fa-building"></i>
                         Organization
                     </div>
                     <div class="result-value">${data.organization || 'N/A'}</div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
                         <i class="fas fa-sitemap"></i>
                         Organization Unit
                     </div>
                     <div class="result-value">${data.organizationUnit || 'N/A'}</div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
                         <i class="fas fa-map-marker-alt"></i>
                         Locality
                     </div>
                     <div class="result-value">${data.locality || 'N/A'}</div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
                         <i class="fas fa-map"></i>
                         State
                     </div>
                     <div class="result-value">${data.state || 'N/A'}</div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
                         <i class="fas fa-flag"></i>
                         Country
                     </div>
                     <div class="result-value">${data.country || 'N/A'}</div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
                         <i class="fas fa-key"></i>
                         Key Size
@@ -1031,89 +1539,67 @@ MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
                         Common Name
                     </div>
                     <div class="result-value">${data.commonName || 'N/A'}</div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
                         <i class="fas fa-list"></i>
                         Subject Alternative Names
                     </div>
                     <div class="result-value">${data.subjectAlternativeNames || 'None'}</div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
                         <i class="fas fa-building"></i>
                         Organization
                     </div>
                     <div class="result-value">${data.organization || 'Not specified'}</div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
                         <i class="fas fa-sitemap"></i>
                         Organization Unit
                     </div>
                     <div class="result-value">${data.organizationUnit || 'Not specified'}</div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
                         <i class="fas fa-map-marker-alt"></i>
                         Locality
                     </div>
                     <div class="result-value">${data.locality || 'Not specified'}</div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
                         <i class="fas fa-map"></i>
                         State
                     </div>
                     <div class="result-value">${data.state || 'Not specified'}</div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
                         <i class="fas fa-flag"></i>
                         Country
                     </div>
                     <div class="result-value">${data.country || 'Not specified'}</div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
                         <i class="fas fa-calendar-check"></i>
                         Valid From
                     </div>
                     <div class="result-value">${data.validFrom || 'N/A'}</div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
                         <i class="fas fa-calendar-times"></i>
                         Valid To
                     </div>
                     <div class="result-value">${data.validTo || 'N/A'}</div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
                         <i class="fas fa-stamp"></i>
                         Issuer
                     </div>
                     <div class="result-value">${data.issuer || 'N/A'}</div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
                         <i class="fas fa-key"></i>
                         Key Size
                     </div>
                     <div class="result-value">${data.keySize || 'N/A'}</div>
-                </div>
-
-                <div class="result-item">
+                <br>
                     <div class="result-label">
                         <i class="fas fa-barcode"></i>
                         Serial Number
