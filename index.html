@@ -1,0 +1,1950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL Certificate Toolkit</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            margin: 40px auto;
+            padding: 40px;
+            max-width: 1000px;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header-section h1 {
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+        }
+
+        .header-section .subtitle {
+            color: #6c757d;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .nav-pills {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-pills .nav-link {
+            border-radius: 10px;
+            color: #6c757d;
+            font-weight: 600;
+            padding: 12px 20px;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .nav-pills .nav-link.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-pills .nav-link:hover:not(.active) {
+            background: #e9ecef;
+            transform: translateY(-1px);
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #e9ecef;
+        }
+
+        .form-control, .form-select {
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .btn-check {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: white;
+        }
+
+        .btn-check:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+
+        .results-section {
+            display: none;
+            background: #fff;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e9ecef;
+        }
+
+        .result-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+            transition: all 0.3s ease;
+        }
+
+        .result-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .result-item.warning {
+            border-left-color: #ffc107;
+        }
+
+        .result-item.error {
+            border-left-color: #dc3545;
+        }
+
+        .result-label {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .result-label i {
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        .result-value {
+            color: #495057;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .certificate-chain {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .certificate-item {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .certificate-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .certificate-item.valid {
+            border-left: 4px solid #28a745;
+        }
+
+        .certificate-item.invalid {
+            border-left: 4px solid #dc3545;
+        }
+
+        .cert-title {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .cert-title i {
+            margin-right: 10px;
+        }
+
+        .cert-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            font-size: 0.9rem;
+        }
+
+        .cert-detail {
+            color: #6c757d;
+        }
+
+        .cert-detail strong {
+            color: #495057;
+        }
+
+        .chain-arrow {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            z-index: 10;
+        }
+
+        .chain-arrow.success {
+            color: #28a745;
+        }
+
+        .chain-arrow.error {
+            color: #dc3545;
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.3em;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-valid {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .expiry-countdown {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .expiry-good {
+            color: #28a745;
+        }
+
+        .expiry-warning {
+            color: #ffc107;
+        }
+
+        .expiry-critical {
+            color: #dc3545;
+        }
+
+        .chain-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .chain-status.valid {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .chain-status.invalid {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .chain-status i {
+            margin-right: 10px;
+            font-size: 1.3rem;
+        }
+
+        .tab-pane {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .file-upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-area:hover {
+            border-color: #764ba2;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .file-upload-area.dragover {
+            border-color: #28a745;
+            background: rgba(40, 167, 69, 0.1);
+        }
+
+        .hash-comparison {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .hash-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #e9ecef;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+
+        .match-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+
+        .match-indicator.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .match-indicator.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .info-section {
+            background: #e7f3ff;
+            border-left: 4px solid #007bff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .info-section h5 {
+            color: #0056b3;
+            margin-bottom: 15px;
+        }
+
+        .info-section p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                margin: 20px;
+                padding: 20px;
+            }
+
+            .header-section h1 {
+                font-size: 2rem;
+            }
+
+            .cert-details {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-pills .nav-link {
+                margin: 2px;
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="main-container">
+        <div class="header-section">
+            <h1><i class="fas fa-shield-alt"></i> SSL Certificate Toolkit</h1>
+            <p class="subtitle">
+                Complete suite of SSL certificate tools for checking, decoding, matching, and converting certificates.
+            </p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-pills nav-fill" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="ssl-checker-tab" data-bs-toggle="pill" data-bs-target="#ssl-checker"
+                        type="button" role="tab">
+                    <i class="fas fa-search"></i> SSL Checker
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="csr-decoder-tab" data-bs-toggle="pill" data-bs-target="#csr-decoder"
+                        type="button" role="tab">
+                    <i class="fas fa-file-code"></i> CSR Decoder
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="cert-decoder-tab" data-bs-toggle="pill" data-bs-target="#cert-decoder"
+                        type="button" role="tab">
+                    <i class="fas fa-certificate"></i> Cert Decoder
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="key-matcher-tab" data-bs-toggle="pill" data-bs-target="#key-matcher"
+                        type="button" role="tab">
+                    <i class="fas fa-key"></i> Key Matcher
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="ssl-converter-tab" data-bs-toggle="pill" data-bs-target="#ssl-converter"
+                        type="button" role="tab">
+                    <i class="fas fa-exchange-alt"></i> SSL Converter
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="mainTabContent">
+
+            <!-- SSL Checker Tab -->
+            <div class="tab-pane fade show active" id="ssl-checker" role="tabpanel">
+                <div class="input-section">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label for="hostname" class="form-label fw-bold">Server Hostname</label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="hostname"
+                                   placeholder="Enter domain name (e.g., example.com)"
+                                   value="">
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button class="btn btn-primary w-100 btn-lg" style="font-size: 1.75rem" onclick="checkSSL()">
+                                <i class="fas fa-search"></i> Check SSL
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Checking SSL certificate...</p>
+                </div>
+
+                <div class="results-section" id="resultsSection">
+                    <h3 class="mb-4"><i class="fas fa-certificate"></i> SSL Certificate Information</h3>
+                    <div id="sslResults"></div>
+                </div>
+            </div>
+
+            <!-- CSR Decoder Tab -->
+            <div class="tab-pane fade" id="csr-decoder" role="tabpanel">
+                <div class="input-section">
+                    <h4 class="mb-3"><i class="fas fa-file-code"></i> CSR Decoder</h4>
+                    <p class="text-muted mb-4">Paste your Certificate Signing Request (CSR) below to decode and view its
+                        information.</p>
+
+                    <div class="mb-3">
+                        <label for="csrInput" class="form-label fw-bold">Certificate Signing Request (CSR)</label>
+                        <textarea class="form-control" id="csrInput" rows="10"
+                                  placeholder="-----BEGIN CERTIFICATE REQUEST-----
+MIICijCCAXICAQAwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUx
+...
+-----END CERTIFICATE REQUEST-----"></textarea>
+                    </div>
+
+                    <button class="btn btn-check" onclick="decodeCSR()">
+                        <i class="fas fa-decode"></i> Decode CSR
+                    </button>
+                </div>
+
+                <div class="results-section" id="csrResults">
+                    <h5 class="mb-3"><i class="fas fa-info-circle"></i> CSR Information</h5>
+                    <div id="csrDecoded"></div>
+                </div>
+            </div>
+
+            <!-- Certificate Decoder Tab -->
+            <div class="tab-pane fade" id="cert-decoder" role="tabpanel">
+                <div class="input-section">
+                    <h4 class="mb-3"><i class="fas fa-certificate"></i> Certificate Decoder</h4>
+                    <p class="text-muted mb-4">Paste your SSL certificate below to decode and view its information.</p>
+
+                    <div class="mb-3">
+                        <label for="certInput" class="form-label fw-bold">SSL Certificate</label>
+                        <textarea class="form-control" id="certInput" rows="10"
+                                  placeholder="-----BEGIN CERTIFICATE-----
+MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAw
+...
+-----END CERTIFICATE-----"></textarea>
+                    </div>
+
+                    <button class="btn btn-check" onclick="decodeCert()">
+                        <i class="fas fa-decode"></i> Decode Certificate
+                    </button>
+                </div>
+
+                <div class="results-section" id="certResults">
+                    <h5 class="mb-3"><i class="fas fa-info-circle"></i> Certificate Information</h5>
+                    <div id="certDecoded"></div>
+                </div>
+            </div>
+
+            <!-- Key Matcher Tab -->
+            <div class="tab-pane fade" id="key-matcher" role="tabpanel">
+                <div class="input-section">
+                    <h4 class="mb-3"><i class="fas fa-key"></i> Certificate Key Matcher</h4>
+                    <p class="text-muted mb-4">Check if certificates, private keys, and CSRs match each other.</p>
+
+                    <div class="mb-3">
+                        <label for="matchType" class="form-label fw-bold">What to Check</label>
+                        <select class="form-select" id="matchType" onchange="updateMatchInputs()">
+                            <option value="cert-key">Check if a Certificate and a Private Key match</option>
+                            <option value="csr-cert">Check if a CSR and a Certificate match</option>
+                        </select>
+                    </div>
+
+                    <div id="matchInputs">
+                        <!-- Dynamic inputs based on selection -->
+                    </div>
+
+                    <button class="btn btn-check" onclick="checkMatch()">
+                        <i class="fas fa-check-double"></i> Check Match
+                    </button>
+                </div>
+
+                <div class="results-section" id="matchResults">
+                    <h5 class="mb-3"><i class="fas fa-info-circle"></i> Match Results</h5>
+                    <div id="matchDecoded"></div>
+                </div>
+            </div>
+
+            <!-- SSL Converter Tab -->
+            <div class="tab-pane fade" id="ssl-converter" role="tabpanel">
+                <div class="input-section">
+                    <h4 class="mb-3"><i class="fas fa-exchange-alt"></i> SSL Certificate Converter</h4>
+                    <p class="text-muted mb-4">Convert SSL certificates between different formats (PEM, DER, PKCS#7,
+                        PKCS#12).</p>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="fromFormat" class="form-label fw-bold">Type of current certificate</label>
+                            <select class="form-select" id="fromFormat" onchange="updateToFormat()">
+                                <option value="pem">PEM (.pem, .crt, .cer, .key)</option>
+                                <option value="der">DER Binary (.der, .cer)</option>
+                                <option value="p7b">PKCS#7 (.p7b, .p7c)</option>
+                                <option value="pfx">PKCS#12 (.pfx, .p12)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="toFormat" class="form-label fw-bold">Type to convert to</label>
+                            <select class="form-select" id="toFormat">
+                                <option value="der">DER Binary</option>
+                                <option value="p7b">PKCS#7</option>
+                                <option value="pfx">PKCS#12</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="certificateFile" class="form-label fw-bold">Upload Certificate File</label>
+                        <div class="file-upload-area" onclick="document.getElementById('certificateFile').click()">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                            <p class="mb-0">Click to select or drag and drop your certificate file</p>
+                            <small class="text-muted">Supported formats: .pem, .crt, .cer, .key, .der, .p7b, .p7c, .pfx,
+                                .p12</small>
+                        </div>
+                        <input type="file" class="form-control" id="certificateFile" style="display: none;"
+                               onchange="handleFileSelect(this)">
+                    </div>
+
+                    <div id="pfxPasswordSection" style="display: none;" class="mb-3">
+                        <label for="pfxPassword" class="form-label fw-bold">PFX Password</label>
+                        <input type="password" class="form-control" id="pfxPassword" placeholder="Enter PFX password">
+                    </div>
+
+                    <button class="btn btn-check" onclick="convertCertificate()">
+                        <i class="fas fa-exchange-alt"></i> Convert Certificate
+                    </button>
+                </div>
+
+                <div class="results-section" id="convertResults">
+                    <h5 class="mb-3"><i class="fas fa-download"></i> Conversion Results</h5>
+                    <div id="convertDecoded"></div>
+                </div>
+
+                <!-- Certificate Format Information -->
+                <div class="info-section">
+                    <h5><i class="fas fa-info-circle"></i> Certificate Format Information</h5>
+
+                    <h6 class="mt-3"><strong>PEM Format</strong></h6>
+                    <p>The PEM format is the most common format that Certificate Authorities issue certificates in. PEM
+                        certificates usually have extensions such as .pem, .crt, .cer, and .key. They are Base64 encoded
+                        ASCII files and contain "-----BEGIN CERTIFICATE-----" and "-----END CERTIFICATE-----"
+                        statements. Server certificates, intermediate certificates, and private keys can all be put into
+                        the PEM format.</p>
+
+                    <h6 class="mt-3"><strong>DER Format</strong></h6>
+                    <p>The DER format is simply a binary form of a certificate instead of the ASCII PEM format. It
+                        sometimes has a file extension of .der but it often has a file extension of .cer so the only way
+                        to tell the difference between a DER .cer file and a PEM .cer file is to open it in a text
+                        editor and look for the BEGIN/END statements.</p>
+
+                    <h6 class="mt-3"><strong>PKCS#7/P7B Format</strong></h6>
+                    <p>The PKCS#7 or P7B format is usually stored in Base64 ASCII format and has a file extension of
+                        .p7b or .p7c. P7B certificates contain "-----BEGIN PKCS7-----" and "-----END PKCS7-----"
+                        statements. A P7B file only contains certificates and chain certificates, not the private
+                        key.</p>
+
+                    <h6 class="mt-3"><strong>PKCS#12/PFX Format</strong></h6>
+                    <p>The PKCS#12 or PFX format is a binary format for storing the server certificate, any intermediate
+                        certificates, and the private key in one encryptable file. PFX files usually have extensions
+                        such as .pfx and .p12. PFX files are typically used on Windows machines to import and export
+                        certificates and private keys.</p>
+
+                    <h6 class="mt-3"><strong>OpenSSL Commands</strong></h6>
+                    <div class="bg-dark text-light p-3 rounded">
+                        <small>
+                            <strong>Convert PEM to DER:</strong><br>
+                            openssl x509 -outform der -in certificate.pem -out certificate.der<br><br>
+                            <strong>Convert PEM to P7B:</strong><br>
+                            openssl crl2pkcs7 -nocrl -certfile certificate.cer -out certificate.p7b<br><br>
+                            <strong>Convert DER to PEM:</strong><br>
+                            openssl x509 -inform der -in certificate.cer -out certificate.pem<br><br>
+                            <strong>Convert PFX to PEM:</strong><br>
+                            openssl pkcs12 -in certificate.pfx -out certificate.cer -nodes
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script>
+    // SSL Checker Functions
+    document.getElementById('hostname').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            checkSSL();
+        }
+    });
+
+    async function checkSSL() {
+        const hostname = document.getElementById('hostname').value.trim();
+
+        if (!hostname) {
+            alert('Please enter a hostname');
+            return;
+        }
+
+        const cleanHostname = hostname.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+
+        document.getElementById('loadingSpinner').style.display = 'block';
+        document.getElementById('resultsSection').style.display = 'none';
+
+        try {
+            const response = await fetch('ssl_checker.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `hostname=${encodeURIComponent(cleanHostname)}`
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                displaySSLResults(data);
+            } else {
+                displayError(data.error || 'Unable to check SSL certificate');
+            }
+
+        } catch (error) {
+            displayError('Network error: ' + error.message);
+        } finally {
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+    }
+
+    function displaySSLResults(data) {
+        const resultsContainer = document.getElementById('sslResults');
+
+        const expiryClass = data.daysUntilExpiry > 30 ? 'expiry-good' :
+            data.daysUntilExpiry > 7 ? 'expiry-warning' : 'expiry-critical';
+
+        const statusBadge = data.isValid ?
+            '<span class="status-badge status-valid">Valid</span>' :
+            '<span class="status-badge status-error">Invalid</span>';
+
+        const trustBadge = data.isTrusted ?
+            '<span class="status-badge status-valid">Trusted</span>' :
+            '<span class="status-badge status-warning">Not Trusted</span>';
+
+        const chainHTML = data.certificateChain.map((cert, index) => {
+            const isLastCert = index === data.certificateChain.length - 1;
+            const isValid = cert.isValid !== false;
+            const arrowClass = isValid ? 'success' : 'error';
+            const arrowIcon = isValid ? 'fas fa-arrow-down' : 'fas fa-times-circle';
+
+            return `
+                    <div class="certificate-item ${isValid ? 'valid' : 'invalid'}">
+                        <div class="cert-title">
+                            <i class="fas fa-certificate"></i>
+                            ${cert.commonName || 'Unknown Certificate'}
+                        </div>
+                        <div class="cert-details">
+                            <div class="cert-detail">
+                                <strong>Common Name:</strong> ${cert.commonName || 'N/A'}
+                            </div>
+                            ${cert.organization ? `<div class="cert-detail">
+                                <strong>Organization:</strong> ${cert.organization}
+                            </div>` : ''}
+                            ${cert.location ? `<div class="cert-detail">
+                                <strong>Location:</strong> ${cert.location}
+                            </div>` : ''}
+                            <div class="cert-detail">
+                                <strong>Valid From:</strong> ${cert.validFrom || 'N/A'}
+                            </div>
+                            <div class="cert-detail">
+                                <strong>Valid To:</strong> ${cert.validTo || 'N/A'}
+                            </div>
+                            <div class="cert-detail">
+                                <strong>Serial Number:</strong> ${cert.serialNumber || 'N/A'}
+                            </div>
+                            <div class="cert-detail">
+                                <strong>Signature Algorithm:</strong> ${cert.signatureAlgorithm || 'N/A'}
+                            </div>
+                            <div class="cert-detail">
+                                <strong>Issuer:</strong> ${cert.issuer || 'N/A'}
+                            </div>
+                        </div>
+                        ${!isLastCert ? `<div class="chain-arrow ${arrowClass}">
+                            <i class="${arrowIcon}"></i>
+                        </div>` : ''}
+                    </div>
+                `;
+        }).join('');
+
+        resultsContainer.innerHTML = `
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    Results generated on ${new Date().toLocaleString()}
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-server"></i>
+                        Hostname Resolution
+                    </div>
+                    <div class="result-value">
+                        <strong>${data.hostname}</strong> resolves to <strong>${data.resolvedIP || 'Unknown'}</strong>
+                    </div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-cogs"></i>
+                        Server Type
+                    </div>
+                    <div class="result-value">${data.serverType || 'Unknown'}</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-shield-check"></i>
+                        Certificate Status
+                    </div>
+                    <div class="result-value">
+                        ${statusBadge} ${trustBadge}
+                        <br>
+                        <small class="text-muted">
+                            ${data.isTrusted ? 'The certificate should be trusted by all major web browsers (all the correct intermediate certificates are installed).' : 'Certificate trust issues detected.'}
+                        </small>
+                    </div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-building"></i>
+                        Certificate Issuer
+                    </div>
+                    <div class="result-value">The certificate was issued by <strong>${data.issuer || 'Unknown'}</strong></div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-calendar-alt"></i>
+                        Certificate Expiry
+                    </div>
+                    <div class="result-value">
+                        <span class="expiry-countdown ${expiryClass}">
+                            The certificate will expire in ${data.daysUntilExpiry} days
+                        </span>
+                    </div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-check-circle"></i>
+                        Hostname Verification
+                    </div>
+                    <div class="result-value">
+                        ${data.hostnameMatch ?
+            `The hostname (${data.hostname}) is correctly listed in the certificate.` :
+            `<span class="text-danger">The hostname (${data.hostname}) is NOT correctly listed in the certificate.</span>`
+        }
+                        <br><br>
+                        <strong>Common Name:</strong> ${data.commonName || 'N/A'}<br>
+                        <strong>SANs:</strong> ${data.sans ? data.sans.join(', ') : 'None'}<br>
+                        <strong>Valid From:</strong> ${data.validFrom || 'N/A'}<br>
+                        <strong>Valid To:</strong> ${data.validTo || 'N/A'}<br>
+                        <strong>Serial Number:</strong> ${data.serialNumber || 'N/A'}<br>
+                        <strong>Signature Algorithm:</strong> ${data.signatureAlgorithm || 'N/A'}
+                    </div>
+                </div>
+
+                <div class="certificate-chain">
+                    <h5 class="mb-3"><i class="fas fa-link"></i> Certificate Chain</h5>
+
+                    <div class="chain-status ${data.chainValid ? 'valid' : 'invalid'}">
+                        <i class="fas ${data.chainValid ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                        ${data.chainValid ? 'Certificate chain is valid and complete' : 'Certificate chain is broken or incomplete'}
+                    </div>
+
+                    ${chainHTML}
+                </div>
+            `;
+
+        document.getElementById('resultsSection').style.display = 'block';
+        document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function displayError(message) {
+        const resultsContainer = document.getElementById('sslResults');
+        resultsContainer.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Error:</strong> ${message}
+                </div>
+            `;
+        document.getElementById('resultsSection').style.display = 'block';
+    }
+
+    // CSR Decoder Functions
+    async function decodeCSR() {
+        const csrInput = document.getElementById('csrInput').value.trim();
+
+        if (!csrInput) {
+            alert('Please enter a CSR');
+            return;
+        }
+
+        try {
+            const response = await fetch('csr_decoder.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `csr=${encodeURIComponent(csrInput)}`
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                displayCSRResults(data.csrInfo);
+            } else {
+                alert('Error: ' + data.error);
+            }
+
+        } catch (error) {
+            alert('Network error: ' + error.message);
+        }
+    }
+
+    function displayCSRResults(data) {
+        const resultsContainer = document.getElementById('csrDecoded');
+
+        resultsContainer.innerHTML = `
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-globe"></i>
+                        Common Name
+                    </div>
+                    <div class="result-value">${data.commonName || 'N/A'}</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-building"></i>
+                        Organization
+                    </div>
+                    <div class="result-value">${data.organization || 'N/A'}</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-sitemap"></i>
+                        Organization Unit
+                    </div>
+                    <div class="result-value">${data.organizationUnit || 'N/A'}</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Locality
+                    </div>
+                    <div class="result-value">${data.locality || 'N/A'}</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-map"></i>
+                        State
+                    </div>
+                    <div class="result-value">${data.state || 'N/A'}</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-flag"></i>
+                        Country
+                    </div>
+                    <div class="result-value">${data.country || 'N/A'}</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-key"></i>
+                        Key Size
+                    </div>
+                    <div class="result-value">${data.keySize || 'N/A'}</div>
+                </div>
+            `;
+
+        document.getElementById('csrResults').style.display = 'block';
+        document.getElementById('csrResults').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Certificate Decoder Functions
+    async function decodeCert() {
+        const certInput = document.getElementById('certInput').value.trim();
+
+        if (!certInput) {
+            alert('Please enter a certificate');
+            return;
+        }
+
+        try {
+            const response = await fetch('cert_decoder.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `certificate=${encodeURIComponent(certInput)}`
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                displayCertResults(data.certInfo);
+            } else {
+                alert('Error: ' + data.error);
+            }
+
+        } catch (error) {
+            alert('Network error: ' + error.message);
+        }
+    }
+
+    function displayCertResults(data) {
+        const resultsContainer = document.getElementById('certDecoded');
+
+        resultsContainer.innerHTML = `
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-globe"></i>
+                        Common Name
+                    </div>
+                    <div class="result-value">${data.commonName || 'N/A'}</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-list"></i>
+                        Subject Alternative Names
+                    </div>
+                    <div class="result-value">${data.subjectAlternativeNames || 'None'}</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-building"></i>
+                        Organization
+                    </div>
+                    <div class="result-value">${data.organization || 'Not specified'}</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-sitemap"></i>
+                        Organization Unit
+                    </div>
+                    <div class="result-value">${data.organizationUnit || 'Not specified'}</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Locality
+                    </div>
+                    <div class="result-value">${data.locality || 'Not specified'}</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-map"></i>
+                        State
+                    </div>
+                    <div class="result-value">${data.state || 'Not specified'}</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-flag"></i>
+                        Country
+                    </div>
+                    <div class="result-value">${data.country || 'Not specified'}</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-calendar-check"></i>
+                        Valid From
+                    </div>
+                    <div class="result-value">${data.validFrom || 'N/A'}</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-calendar-times"></i>
+                        Valid To
+                    </div>
+                    <div class="result-value">${data.validTo || 'N/A'}</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-stamp"></i>
+                        Issuer
+                    </div>
+                    <div class="result-value">${data.issuer || 'N/A'}</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-key"></i>
+                        Key Size
+                    </div>
+                    <div class="result-value">${data.keySize || 'N/A'}</div>
+                </div>
+
+                <div class="result-item">
+                    <div class="result-label">
+                        <i class="fas fa-barcode"></i>
+                        Serial Number
+                    </div>
+                    <div class="result-value">${data.serialNumber || 'N/A'}</div>
+                </div>
+            `;
+
+        document.getElementById('certResults').style.display = 'block';
+        document.getElementById('certResults').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Key Matcher Functions
+    function updateMatchInputs() {
+        const matchType = document.getElementById('matchType').value;
+        const container = document.getElementById('matchInputs');
+
+        if (matchType === 'cert-key') {
+            container.innerHTML = `
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="certForMatch" class="form-label fw-bold">Certificate</label>
+                            <textarea class="form-control" id="certForMatch" rows="8"
+                                      placeholder="-----BEGIN CERTIFICATE-----
+...
+-----END CERTIFICATE-----"></textarea>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="keyForMatch" class="form-label fw-bold">Private Key</label>
+                            <textarea class="form-control" id="keyForMatch" rows="8"
+                                      placeholder="-----BEGIN PRIVATE KEY-----
+...
+-----END PRIVATE KEY-----"></textarea>
+                        </div>
+                    </div>
+                `;
+        } else {
+            container.innerHTML = `
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="csrForMatch" class="form-label fw-bold">CSR</label>
+                            <textarea class="form-control" id="csrForMatch" rows="8"
+                                      placeholder="-----BEGIN CERTIFICATE REQUEST-----
+...
+-----END CERTIFICATE REQUEST-----"></textarea>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="certForCSRMatch" class="form-label fw-bold">Certificate</label>
+                            <textarea class="form-control" id="certForCSRMatch" rows="8"
+                                      placeholder="-----BEGIN CERTIFICATE-----
+...
+-----END CERTIFICATE-----"></textarea>
+                        </div>
+                    </div>
+                `;
+        }
+    }
+
+    async function checkMatch() {
+        const matchType = document.getElementById('matchType').value;
+        let item1, item2;
+
+        if (matchType === 'cert-key') {
+            item1 = document.getElementById('certForMatch').value.trim();
+            item2 = document.getElementById('keyForMatch').value.trim();
+        } else {
+            item1 = document.getElementById('csrForMatch').value.trim();
+            item2 = document.getElementById('certForCSRMatch').value.trim();
+        }
+
+        if (!item1 || !item2) {
+            alert('Please fill in both fields');
+            return;
+        }
+
+        try {
+            const response = await fetch('key_matcher.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `matchType=${matchType}&item1=${encodeURIComponent(item1)}&item2=${encodeURIComponent(item2)}`
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                displayMatchResults(data, matchType);
+            } else {
+                alert('Error: ' + data.error);
+            }
+
+        } catch (error) {
+            alert('Network error: ' + error.message);
+        }
+    }
+
+    function displayMatchResults(data, type) {
+        const resultsContainer = document.getElementById('matchDecoded');
+        const matchText = type === 'cert-key' ? 'certificate and private key' : 'CSR and certificate';
+
+        resultsContainer.innerHTML = `
+                <div class="match-indicator ${data.match ? 'success' : 'error'}">
+                    <i class="fas ${data.match ? 'fa-check-circle' : 'fa-times-circle'} me-2"></i>
+                    The ${matchText} ${data.match ? 'match!' : 'do not match!'}
+                </div>
+
+                <div class="hash-comparison">
+                    <h6 class="mb-3">Hash Comparison</h6>
+                    <div class="hash-item">
+                        <div class="fw-bold mb-2">
+                            <i class="fas ${data.match ? 'fa-check text-success' : 'fa-times text-danger'} me-2"></i>
+                            Certificate Hash:
+                        </div>
+                        <div>${data.certHash}</div>
+                    </div>
+                    <div class="hash-item">
+                        <div class="fw-bold mb-2">
+                            <i class="fas ${data.match ? 'fa-check text-success' : 'fa-times text-danger'} me-2"></i>
+                            ${type === 'cert-key' ? 'Key' : 'CSR'} Hash:
+                        </div>
+                        <div>${data.keyHash}</div>
+                    </div>
+                </div>
+            `;
+
+        document.getElementById('matchResults').style.display = 'block';
+        document.getElementById('matchResults').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // SSL Converter Functions
+    function updateToFormat() {
+        const fromFormat = document.getElementById('fromFormat').value;
+        const toFormatSelect = document.getElementById('toFormat');
+        const pfxPasswordSection = document.getElementById('pfxPasswordSection');
+
+        // Clear current options
+        toFormatSelect.innerHTML = '';
+
+        // Define conversion rules
+        const conversionRules = {
+            'pem': ['der', 'p7b', 'pfx'],
+            'der': ['pem'],
+            'p7b': ['pem', 'pfx'],
+            'pfx': ['pem']
+        };
+
+        const formatNames = {
+            'der': 'DER Binary',
+            'p7b': 'PKCS#7',
+            'pfx': 'PKCS#12',
+            'pem': 'PEM'
+        };
+
+        // Add allowed conversion options
+        conversionRules[fromFormat].forEach(format => {
+            const option = document.createElement('option');
+            option.value = format;
+            option.textContent = formatNames[format];
+            toFormatSelect.appendChild(option);
+        });
+
+        // Show/hide PFX password section
+        if (fromFormat === 'pfx') {
+            pfxPasswordSection.style.display = 'block';
+        } else {
+            pfxPasswordSection.style.display = 'none';
+        }
+    }
+
+    function handleFileSelect(input) {
+        const file = input.files[0];
+        if (file) {
+            const uploadArea = document.querySelector('.file-upload-area');
+            uploadArea.innerHTML = `
+                    <i class="fas fa-file-check fa-3x text-success mb-3"></i>
+                    <p class="mb-0"><strong>${file.name}</strong></p>
+                    <small class="text-muted">Size: ${(file.size / 1024).toFixed(2)} KB</small>
+                `;
+        }
+    }
+
+    async function convertCertificate() {
+        const fromFormat = document.getElementById('fromFormat').value;
+        const toFormat = document.getElementById('toFormat').value;
+        const file = document.getElementById('certificateFile').files[0];
+        const pfxPassword = document.getElementById('pfxPassword').value;
+
+        if (!file) {
+            alert('Please select a certificate file');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('certificate', file);
+        formData.append('fromFormat', fromFormat);
+        formData.append('toFormat', toFormat);
+        if (pfxPassword) {
+            formData.append('pfxPassword', pfxPassword);
+        }
+
+        try {
+            const response = await fetch('ssl_converter.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                displayConversionResults(data);
+            } else {
+                displayConversionResults({ success: false, error: data.error });
+            }
+
+        } catch (error) {
+            displayConversionResults({ success: false, error: 'Network error: ' + error.message });
+        }
+    }
+
+    function displayConversionResults(data) {
+        const resultsContainer = document.getElementById('convertDecoded');
+
+        if (data.success) {
+            resultsContainer.innerHTML = `
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i>
+                        <strong>Conversion Successful!</strong> Your certificate has been converted from ${data.originalFormat} to ${data.convertedFormat} format.
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">
+                            <i class="fas fa-file-download"></i>
+                            Download Converted Certificate
+                        </div>
+                        <div class="result-value">
+                            <button class="btn btn-success" onclick="downloadFile('${data.filename}', '${data.content}')">
+                                <i class="fas fa-download"></i> Download ${data.filename} (${data.size})
+                            </button>
+                        </div>
+                    </div>
+                `;
+        } else {
+            resultsContainer.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Conversion Failed!</strong> ${data.error || 'Unknown error occurred during conversion.'}
+                    </div>
+                `;
+        }
+
+        document.getElementById('convertResults').style.display = 'block';
+        document.getElementById('convertResults').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function downloadFile(filename, content) {
+        const downloadUrl = `file_download.php?file=${encodeURIComponent(filename)}&content=${encodeURIComponent(content)}`;
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+        updateMatchInputs();
+        updateToFormat();
+
+        // File drag and drop functionality
+        const uploadArea = document.querySelector('.file-upload-area');
+
+        if (uploadArea) {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight(e) {
+                uploadArea.classList.add('dragover');
+            }
+
+            function unhighlight(e) {
+                uploadArea.classList.remove('dragover');
+            }
+
+            uploadArea.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+
+                if (files.length > 0) {
+                    document.getElementById('certificateFile').files = files;
+                    handleFileSelect(document.getElementById('certificateFile'));
+                }
+            }
+        }
+    });
+
+    // Tab switching with data persistence
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabButtons = document.querySelectorAll('[data-bs-toggle="pill"]');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('shown.bs.tab', function(event) {
+                // Reset any displayed results when switching tabs
+                const allResultsSections = document.querySelectorAll('.results-section');
+                allResultsSections.forEach(section => {
+                    if (section.id !== 'resultsSection') { // Keep SSL checker results
+                        section.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+
+    // Form validation and user feedback
+    function validateForm(formType) {
+        switch(formType) {
+            case 'ssl':
+                const hostname = document.getElementById('hostname').value.trim();
+                if (!hostname) {
+                    showToast('Please enter a hostname', 'warning');
+                    return false;
+                }
+                if (!isValidHostname(hostname)) {
+                    showToast('Please enter a valid hostname or domain', 'warning');
+                    return false;
+                }
+                break;
+
+            case 'csr':
+                const csr = document.getElementById('csrInput').value.trim();
+                if (!csr.includes('BEGIN CERTIFICATE REQUEST')) {
+                    showToast('Please enter a valid CSR format', 'warning');
+                    return false;
+                }
+                break;
+
+            case 'cert':
+                const cert = document.getElementById('certInput').value.trim();
+                if (!cert.includes('BEGIN CERTIFICATE')) {
+                    showToast('Please enter a valid certificate format', 'warning');
+                    return false;
+                }
+                break;
+        }
+        return true;
+    }
+
+    function isValidHostname(hostname) {
+        const cleanHostname = hostname.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+        const hostnameRegex = /^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*$/;
+        return hostnameRegex.test(cleanHostname);
+    }
+
+    function showToast(message, type = 'info') {
+        // Create toast container if it doesn't exist
+        let toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.id = 'toast-container';
+            toastContainer.className = 'toast-container position-fixed top-0 end-0 p-3';
+            toastContainer.style.zIndex = '9999';
+            document.body.appendChild(toastContainer);
+        }
+
+        // Create toast element
+        const toastId = 'toast-' + Date.now();
+        const toast = document.createElement('div');
+        toast.id = toastId;
+        toast.className = `toast align-items-center text-white bg-${type === 'warning' ? 'warning' : type === 'error' ? 'danger' : type === 'success' ? 'success' : 'primary'} border-0`;
+        toast.setAttribute('role', 'alert');
+        toast.setAttribute('aria-live', 'assertive');
+        toast.setAttribute('aria-atomic', 'true');
+
+        toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas ${type === 'warning' ? 'fa-exclamation-triangle' : type === 'error' ? 'fa-times-circle' : type === 'success' ? 'fa-check-circle' : 'fa-info-circle'} me-2"></i>
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            `;
+
+        toastContainer.appendChild(toast);
+
+        // Initialize and show toast
+        const bsToast = new bootstrap.Toast(toast, {
+            autohide: true,
+            delay: 5000
+        });
+        bsToast.show();
+
+        // Remove toast element after it's hidden
+        toast.addEventListener('hidden.bs.toast', function() {
+            toast.remove();
+        });
+    }
+
+    // Enhanced SSL checker with validation
+    async function checkSSL() {
+        const hostname = document.getElementById('hostname').value.trim();
+
+        if (!validateForm('ssl')) {
+            return;
+        }
+
+        const cleanHostname = hostname.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+
+        document.getElementById('loadingSpinner').style.display = 'block';
+        document.getElementById('resultsSection').style.display = 'none';
+
+        try {
+            const response = await fetch('ssl_checker.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `hostname=${encodeURIComponent(cleanHostname)}`
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
+                displaySSLResults(data);
+                showToast('SSL certificate check completed successfully!', 'success');
+            } else {
+                displayError(data.error || 'Unable to check SSL certificate');
+                showToast('Failed to check SSL certificate: ' + (data.error || 'Unknown error'), 'error');
+            }
+
+        } catch (error) {
+            displayError('Network error: ' + error.message);
+            showToast('Network error: ' + error.message, 'error');
+        } finally {
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+    }
+
+    // Enhanced CSR decoder with validation
+    async function decodeCSR() {
+        if (!validateForm('csr')) {
+            return;
+        }
+
+        const csrInput = document.getElementById('csrInput').value.trim();
+
+        // Show loading state
+        const decodeButton = document.querySelector('[onclick="decodeCSR()"]');
+        const originalText = decodeButton.innerHTML;
+        decodeButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Decoding...';
+        decodeButton.disabled = true;
+
+        try {
+            const response = await fetch('csr_decoder.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `csr=${encodeURIComponent(csrInput)}`
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
+                displayCSRResults(data.csrInfo);
+                showToast('CSR decoded successfully!', 'success');
+            } else {
+                showToast('Error decoding CSR: ' + data.error, 'error');
+            }
+
+        } catch (error) {
+            showToast('Network error: ' + error.message, 'error');
+        } finally {
+            decodeButton.innerHTML = originalText;
+            decodeButton.disabled = false;
+        }
+    }
+
+    // Enhanced certificate decoder with validation
+    async function decodeCert() {
+        if (!validateForm('cert')) {
+            return;
+        }
+
+        const certInput = document.getElementById('certInput').value.trim();
+
+        // Show loading state
+        const decodeButton = document.querySelector('[onclick="decodeCert()"]');
+        const originalText = decodeButton.innerHTML;
+        decodeButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Decoding...';
+        decodeButton.disabled = true;
+
+        try {
+            const response = await fetch('cert_decoder.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `certificate=${encodeURIComponent(certInput)}`
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
+                displayCertResults(data.certInfo);
+                showToast('Certificate decoded successfully!', 'success');
+            } else {
+                showToast('Error decoding certificate: ' + data.error, 'error');
+            }
+
+        } catch (error) {
+            showToast('Network error: ' + error.message, 'error');
+        } finally {
+            decodeButton.innerHTML = originalText;
+            decodeButton.disabled = false;
+        }
+    }
+
+    // Enhanced key matcher with validation
+    async function checkMatch() {
+        const matchType = document.getElementById('matchType').value;
+        let item1, item2;
+
+        if (matchType === 'cert-key') {
+            item1 = document.getElementById('certForMatch').value.trim();
+            item2 = document.getElementById('keyForMatch').value.trim();
+
+            if (!item1.includes('BEGIN CERTIFICATE') || !item2.includes('BEGIN')) {
+                showToast('Please enter valid certificate and private key formats', 'warning');
+                return;
+            }
+        } else {
+            item1 = document.getElementById('csrForMatch').value.trim();
+            item2 = document.getElementById('certForCSRMatch').value.trim();
+
+            if (!item1.includes('BEGIN CERTIFICATE REQUEST') || !item2.includes('BEGIN CERTIFICATE')) {
+                showToast('Please enter valid CSR and certificate formats', 'warning');
+                return;
+            }
+        }
+
+        if (!item1 || !item2) {
+            showToast('Please fill in both fields', 'warning');
+            return;
+        }
+
+        // Show loading state
+        const matchButton = document.querySelector('[onclick="checkMatch()"]');
+        const originalText = matchButton.innerHTML;
+        matchButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+        matchButton.disabled = true;
+
+        try {
+            const response = await fetch('key_matcher.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `matchType=${matchType}&item1=${encodeURIComponent(item1)}&item2=${encodeURIComponent(item2)}`
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
+                displayMatchResults(data, matchType);
+                const matchText = matchType === 'cert-key' ? 'certificate and private key' : 'CSR and certificate';
+                showToast(`Match check completed: ${matchText} ${data.match ? 'match' : 'do not match'}!`, data.match ? 'success' : 'warning');
+            } else {
+                showToast('Error checking match: ' + data.error, 'error');
+            }
+
+        } catch (error) {
+            showToast('Network error: ' + error.message, 'error');
+        } finally {
+            matchButton.innerHTML = originalText;
+            matchButton.disabled = false;
+        }
+    }
+
+    // Enhanced certificate converter with validation
+    async function convertCertificate() {
+        const fromFormat = document.getElementById('fromFormat').value;
+        const toFormat = document.getElementById('toFormat').value;
+        const file = document.getElementById('certificateFile').files[0];
+        const pfxPassword = document.getElementById('pfxPassword').value;
+
+        if (!file) {
+            showToast('Please select a certificate file', 'warning');
+            return;
+        }
+
+        // Validate file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            showToast('File size must be less than 10MB', 'warning');
+            return;
+        }
+
+        // Validate PFX password if converting from PFX
+        if (fromFormat === 'pfx' && !pfxPassword) {
+            showToast('PFX password is required for conversion', 'warning');
+            return;
+        }
+
+        // Show loading state
+        const convertButton = document.querySelector('[onclick="convertCertificate()"]');
+        const originalText = convertButton.innerHTML;
+        convertButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Converting...';
+        convertButton.disabled = true;
+
+        const formData = new FormData();
+        formData.append('certificate', file);
+        formData.append('fromFormat', fromFormat);
+        formData.append('toFormat', toFormat);
+        if (pfxPassword) {
+            formData.append('pfxPassword', pfxPassword);
+        }
+
+        try {
+            const response = await fetch('ssl_converter.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
+                displayConversionResults(data);
+                showToast(`Certificate converted successfully from ${data.originalFormat} to ${data.convertedFormat}!`, 'success');
+            } else {
+                displayConversionResults({ success: false, error: data.error });
+                showToast('Conversion failed: ' + data.error, 'error');
+            }
+
+        } catch (error) {
+            displayConversionResults({ success: false, error: 'Network error: ' + error.message });
+            showToast('Network error: ' + error.message, 'error');
+        } finally {
+            convertButton.innerHTML = originalText;
+            convertButton.disabled = false;
+        }
+    }
+
+    // Utility functions for better UX
+    function clearResults(section) {
+        const resultsSections = {
+            'ssl': 'resultsSection',
+            'csr': 'csrResults',
+            'cert': 'certResults',
+            'match': 'matchResults',
+            'convert': 'convertResults'
+        };
+
+        if (resultsSections[section]) {
+            document.getElementById(resultsSections[section]).style.display = 'none';
+        }
+    }
+
+    function copyToClipboard(text, buttonElement) {
+        navigator.clipboard.writeText(text).then(function() {
+            const originalText = buttonElement.innerHTML;
+            buttonElement.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            buttonElement.classList.add('btn-success');
+            buttonElement.classList.remove('btn-outline-secondary');
+
+            setTimeout(function() {
+                buttonElement.innerHTML = originalText;
+                buttonElement.classList.remove('btn-success');
+                buttonElement.classList.add('btn-outline-secondary');
+            }, 2000);
+
+            showToast('Copied to clipboard!', 'success');
+        }).catch(function(err) {
+            showToast('Failed to copy to clipboard', 'error');
+        });
+    }
+
+    // Add copy buttons to hash results
+    function enhanceHashDisplay() {
+        const hashItems = document.querySelectorAll('.hash-item div:last-child');
+        hashItems.forEach(function(hashDiv) {
+            if (!hashDiv.querySelector('.copy-btn')) {
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'btn btn-outline-secondary btn-sm copy-btn ms-2';
+                copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                copyBtn.onclick = function() {
+                    copyToClipboard(hashDiv.textContent.trim(), this);
+                };
+                hashDiv.style.display = 'flex';
+                hashDiv.style.alignItems = 'center';
+                hashDiv.style.justifyContent = 'space-between';
+                hashDiv.appendChild(copyBtn);
+            }
+        });
+    }
+
+    // Auto-clear forms
+    function clearForm(formType) {
+        switch(formType) {
+            case 'ssl':
+                document.getElementById('hostname').value = '';
+                clearResults('ssl');
+                break;
+            case 'csr':
+                document.getElementById('csrInput').value = '';
+                clearResults('csr');
+                break;
+            case 'cert':
+                document.getElementById('certInput').value = '';
+                clearResults('cert');
+                break;
+            case 'match':
+                const matchType = document.getElementById('matchType').value;
+                if (matchType === 'cert-key') {
+                    document.getElementById('certForMatch').value = '';
+                    document.getElementById('keyForMatch').value = '';
+                } else {
+                    document.getElementById('csrForMatch').value = '';
+                    document.getElementById('certForCSRMatch').value = '';
+                }
+                clearResults('match');
+                break;
+            case 'convert':
+                document.getElementById('certificateFile').value = '';
+                document.getElementById('pfxPassword').value = '';
+                document.querySelector('.file-upload-area').innerHTML = `
+                        <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                        <p class="mb-0">Click to select or drag and drop your certificate file</p>
+                        <small class="text-muted">Supported formats: .pem, .crt, .cer, .key, .der, .p7b, .p7c, .pfx, .p12</small>
+                    `;
+                clearResults('convert');
+                break;
+        }
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        // Ctrl/Cmd + Enter to submit current form
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            const activeTab = document.querySelector('.nav-link.active').id;
+
+            switch(activeTab) {
+                case 'ssl-checker-tab':
+                    checkSSL();
+                    break;
+                case 'csr-decoder-tab':
+                    decodeCSR();
+                    break;
+                case 'cert-decoder-tab':
+                    decodeCert();
+                    break;
+                case 'key-matcher-tab':
+                    checkMatch();
+                    break;
+                case 'ssl-converter-tab':
+                    convertCertificate();
+                    break;
+            }
+        }
+
+        // Escape to clear current form
+        if (e.key === 'Escape') {
+            const activeTab = document.querySelector('.nav-link.active').id;
+
+            switch(activeTab) {
+                case 'ssl-checker-tab':
+                    clearForm('ssl');
+                    break;
+                case 'csr-decoder-tab':
+                    clearForm('csr');
+                    break;
+                case 'cert-decoder-tab':
+                    clearForm('cert');
+                    break;
+                case 'key-matcher-tab':
+                    clearForm('match');
+                    break;
+                case 'ssl-converter-tab':
+                    clearForm('convert');
+                    break;
+            }
+        }
+    });
+
+    // Add clear buttons to forms
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add clear buttons to text areas and inputs
+        const addClearButton = function(inputElement, formType) {
+            const container = inputElement.parentElement;
+            const clearBtn = document.createElement('button');
+            clearBtn.type = 'button';
+            clearBtn.className = 'btn btn-outline-secondary btn-sm mt-2';
+            clearBtn.innerHTML = '<i class="fas fa-times"></i> Clear';
+            clearBtn.onclick = function() {
+                clearForm(formType);
+            };
+            container.appendChild(clearBtn);
+        };
+
+        // Add keyboard shortcut hints
+        const shortcutHint = document.createElement('div');
+        shortcutHint.className = 'text-muted small mt-2';
+        shortcutHint.innerHTML = '<i class="fas fa-keyboard"></i> Shortcuts: Ctrl+Enter to submit, Escape to clear';
+        document.querySelector('.main-container').appendChild(shortcutHint);
+    });
+</script>
+</body>
+</html>
